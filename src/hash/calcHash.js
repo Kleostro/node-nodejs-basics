@@ -1,5 +1,24 @@
+import { createHash } from 'crypto';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+
+const __dirname = new URL('.', import.meta.url).pathname;
+const filesFolderName = 'files';
+const fileName = 'fileToCalculateHashFor.txt';
+const file = join(__dirname, filesFolderName, fileName);
+
 const calculateHash = async () => {
-    // Write your code here 
+    const hash = createHash('sha256');
+    const fileStream = createReadStream(file);
+
+    fileStream.on('data', (chunk) => {
+        hash.update(chunk);
+    });
+
+    fileStream.on('end', () => {
+        const hashHex = hash.digest('hex');
+        console.log(hashHex);
+    });
 };
 
 await calculateHash();
