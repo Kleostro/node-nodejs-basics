@@ -6,7 +6,7 @@ const filesFolderName = 'files';
 const filesCopyFolderName = 'files_copy';
 const filesFolderPath = join(__dirname, filesFolderName);
 
-const findFilesFolder = async (folderPath) => {
+const readFilesFolder = async (folderPath) => {
     try {
         const filesFolder = await promises.readdir(folderPath);
         return filesFolder;
@@ -35,7 +35,7 @@ const createCopyFilesFolder = async (dirname, folderCopyName) => {
 };
 
 const copy = async () => {
-    const filesFolder = await findFilesFolder(filesFolderPath);
+    const filesFolder = await readFilesFolder(filesFolderPath);
     if (!filesFolder) {
         return;
     }
