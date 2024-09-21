@@ -1,6 +1,5 @@
 import { createGzip } from 'zlib';
-import { createReadStream, createWriteStream } from 'fs';
-import { pipeline } from 'stream';
+import { createReadStream, createWriteStream, unlinkSync, promises } from 'fs';
 import { join } from 'path';
 
 const __dirname = new URL('.', import.meta.url).pathname;
@@ -8,19 +7,29 @@ const filesFolderName = 'files';
 const fileToCompressName = 'fileToCompress.txt';
 const compressedFileName = 'archive.gz';
 const fileToCompress = join(__dirname, filesFolderName, fileToCompressName);
+const compressedFile = join(__dirname, filesFolderName, compressedFileName);
 
 const compress = async () => {
-    const gzip = createGzip();
-    const readStream = createReadStream(fileToCompress);
-    const writeStream = createWriteStream(join(__dirname, filesFolderName, compressedFileName));
+    try {
+        await promises.access(fileToCompress);
 
-    pipeline(readStream, gzip, writeStream, (err) => {
-        if (err) {
-            console.error('Compression failed:', err);
+        const gzip = createGzip();
+        const readStream = createReadStream(fileToCompress);
+        const writeStream = createWriteStream(compressedFile);
+
+        readStream.pipe(gzip).pipe(writeStream);
+
+        writeStream.on('finish', async () => {
+            console.log('\x1b[32mCompression successful!');
+            await promises.unlink(fileToCompress);
+        });
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            console.error('Compression failed');
         } else {
-            console.log('Compression successful!');
+            console.error(err);
         }
-    });
+    }
 };
 
 await compress();
