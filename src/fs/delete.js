@@ -10,7 +10,7 @@ const deletedFile = join(__dirname, filesFolderName, deletedFileName);
 const remove = async () => {
     try {
         await promises.access(deletedFile);
-        await promises.unlink(deletedFile);
+        await promises.rm(deletedFile);
     } catch (err) {
         if (err.code === 'ENOENT') {
             console.error('FS operation failed');
