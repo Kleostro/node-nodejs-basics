@@ -44,7 +44,7 @@ const copy = async () => {
     if (!copyFilesFolder) {
         return;
     }
-    await Promise.all(filesFolder.map(async (file) => await promises.copyFile(join(filesFolderPath, file), join(__dirname, filesCopyFolderName, file))));
+    await Promise.all(filesFolder.map((file) => promises.copyFile(join(filesFolderPath, file), join(__dirname, filesCopyFolderName, file))));
 };
 
 await copy();
