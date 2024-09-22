@@ -1,5 +1,5 @@
 import { createGzip } from 'zlib';
-import { createReadStream, createWriteStream, unlinkSync, promises } from 'fs';
+import { createReadStream, createWriteStream, promises } from 'fs';
 import { join } from 'path';
 
 const __dirname = new URL('.', import.meta.url).pathname;
