@@ -1,8 +1,9 @@
 import { Worker } from 'worker_threads';
 import { cpus } from 'os';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const fileWorkerName = 'worker.js';
 const fileWorker = join(__dirname, fileWorkerName);
 const numCPUs = cpus().length;

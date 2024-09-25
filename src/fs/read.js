@@ -1,7 +1,8 @@
 import { promises } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const filesFolderName = 'files';
 const readFileName = 'fileToRead.txt';
 const readFile = join(__dirname, filesFolderName, readFileName);

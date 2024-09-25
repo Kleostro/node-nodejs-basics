@@ -1,9 +1,10 @@
 import { createWriteStream } from 'fs';
 import { createInterface } from 'readline';
-import { join } from 'path';
 import process from 'process';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const filesFolderName = 'files';
 const writeFileName = 'fileToWrite.txt';
 const writeFile = join(__dirname, filesFolderName, writeFileName);

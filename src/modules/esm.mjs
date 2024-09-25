@@ -1,9 +1,10 @@
-import path from 'path';
 import { release, version } from 'os';
 import { createServer } from 'http';
 import { promises } from 'fs';
+import { path } from 'path';
+import { fileURLToPath } from 'url';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const filesFolderName = 'files';
 const aFileName = 'a.json';
 const bFileName = 'b.json';
