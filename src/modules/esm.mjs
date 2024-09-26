@@ -1,7 +1,7 @@
 import { release, version } from 'os';
 import { createServer } from 'http';
 import { promises } from 'fs';
-import { path } from 'path';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
