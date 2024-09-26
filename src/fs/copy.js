@@ -13,11 +13,10 @@ const readFilesFolder = async (folderPath) => {
         return filesFolder;
     } catch (err) {
         if (err.code === 'ENOENT') {
-            console.error('FS operation failed');
+            throw new Error('FS operation failed');
         } else {
-            console.error(err);
+            throw err;
         }
-        return null;
     }
 };
 
@@ -27,25 +26,35 @@ const createCopyFilesFolder = async (dirname, folderCopyName) => {
         return true;
     } catch (err) {
         if (err.code === 'EEXIST') {
-            console.error('FS operation failed');
+            throw new Error('FS operation failed');
         } else {
-            console.error(err);
+            throw err;
         }
-        return false;
+    }
+};
+
+const copyRecursive = async (sourcePath, destPath) => {
+    const stats = await promises.stat(sourcePath);
+    if (stats.isFile()) {
+        await promises.copyFile(sourcePath, destPath);
+    } else if (stats.isDirectory()) {
+        await promises.mkdir(destPath, { recursive: true });
+        const files = await promises.readdir(sourcePath);
+        await Promise.all(files.map(file =>
+            copyRecursive(join(sourcePath, file), join(destPath, file))
+        ));
     }
 };
 
 const copy = async () => {
     const filesFolder = await readFilesFolder(filesFolderPath);
-    if (!filesFolder) {
-        return;
-    }
+    await createCopyFilesFolder(__dirname, filesCopyFolderName);
 
-    const copyFilesFolder = await createCopyFilesFolder(__dirname, filesCopyFolderName);
-    if (!copyFilesFolder) {
-        return;
-    }
-    await Promise.all(filesFolder.map((file) => promises.copyFile(join(filesFolderPath, file), join(__dirname, filesCopyFolderName, file))));
+    await Promise.all(filesFolder.map(file =>
+        copyRecursive(join(filesFolderPath, file), join(__dirname, filesCopyFolderName, file))
+    ));
 };
 
-await copy();
+await copy().catch((err) => {
+    console.error(err.message);
+});

@@ -14,11 +14,13 @@ const remove = async () => {
         await promises.rm(deletedFile);
     } catch (err) {
         if (err.code === 'ENOENT') {
-            console.error('FS operation failed');
+            throw new Error('FS operation failed');
         } else {
-            console.error(err);
+            throw err;
         }
     }
 };
 
-await remove();
+await remove().catch((err) => {
+    console.error(err.message);
+});
