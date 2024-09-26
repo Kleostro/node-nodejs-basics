@@ -14,11 +14,13 @@ const read = async () => {
         console.log(fileContent);
     } catch (err) {
         if (err.code === 'ENOENT') {
-            console.error('FS operation failed');
+            throw new Error('FS operation failed');
         } else {
-            console.error(err);
+            throw err;
         }
     }
 };
 
-await read();
+await read().catch((err) => {
+    console.error(err.message);
+});

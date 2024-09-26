@@ -13,8 +13,10 @@ const rename = async () => {
         await promises.access(renamedFile);
         await promises.rename(renamedFile, join(__dirname, filesFolderName, afterRenameFileName));
     } catch (err) {
-        console.error('FS operation failed');
+        throw new Error('FS operation failed');
     }
 };
 
-await rename();
+await rename().catch((err) => {
+    console.error(err.message);
+});

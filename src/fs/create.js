@@ -10,14 +10,16 @@ const newFile = join(__dirname, filesFolderName, newFileName);
 const create = async () => {
     try {
         await promises.access(newFile);
-        console.error('FS operation failed');
+        throw new Error('FS operation failed');
     } catch (err) {
         if (err.code === 'ENOENT') {
             await promises.writeFile(newFile, 'I am fresh and young');
         } else {
-            console.error(err);
+            throw err;
         }
     }
 };
 
-await create();
+await create().catch((err) => {
+    console.error(err.message);
+});

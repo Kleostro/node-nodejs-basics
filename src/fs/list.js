@@ -12,19 +12,15 @@ const readFilesFolder = async (folderPath) => {
         return filesFolder;
     } catch (err) {
         if (err.code === 'ENOENT') {
-            console.error('FS operation failed');
+            throw new Error('FS operation failed');
         } else {
-            console.error(err);
+            throw err;
         }
-        return null;
     }
 };
 
 const list = async () => {
     const filesFolder = await readFilesFolder(filesFolderPath);
-    if (!filesFolder) {
-        return;
-    }
     const fileNamesArr = filesFolder.map((file) => basename(file));
     const fileNamesList = fileNamesArr.join('\n');
 
@@ -33,4 +29,6 @@ const list = async () => {
     console.log(fileNamesList);
 };
 
-await list();
+await list().catch((err) => {
+    console.error(err.message);
+});
