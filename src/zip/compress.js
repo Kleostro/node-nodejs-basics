@@ -26,11 +26,13 @@ const compress = async () => {
         });
     } catch (err) {
         if (err.code === 'ENOENT') {
-            console.error('Compression failed');
+            throw new Error('Compression failed');
         } else {
-            console.error(err);
+            throw err;
         }
     }
 };
 
-await compress();
+await compress().catch((err) => {
+    console.error(err.message);
+});

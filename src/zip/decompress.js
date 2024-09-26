@@ -26,11 +26,13 @@ const decompress = async () => {
         });
     } catch (err) {
         if (err.code === 'ENOENT') {
-            console.error('Decompression failed');
+            throw new Error('Decompression failed');
         } else {
-            console.error(err);
+            throw err;
         }
     }
 };
 
-await decompress();
+await decompress().catch((err) => {
+    console.error(err.message);
+});
